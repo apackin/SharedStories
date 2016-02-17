@@ -1,8 +1,9 @@
 'use strict'; 
 
-var app = require('express')();
-var path = require('path');
-var session = require('express-session');
+var app = require('express')(),
+	path = require('path'),
+	session = require('express-session'),
+	passport = require('passport');
 
 
 app.use(session({
@@ -15,11 +16,16 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(passport.initialize());
+
+app.use(passport.session());
+
 app.use(require('./logging.middleware'));
 
 app.use(require('./requestState.middleware'));
 
 app.use(require('./statics.middleware'));
+
 
 app.use('/api', require('../api/api.router'));
 
