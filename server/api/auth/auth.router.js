@@ -58,8 +58,10 @@ router.get('/google', passport.authenticate('google', { scope : 'email' }));
 
 router.get('/google/callback',
   passport.authenticate('google', {
+
     successRedirect : '/home',
     failureRedirect : '/'
+
   }));
 
 
@@ -76,6 +78,23 @@ passport.use(
         /*
         --- fill this part in ---
         */
+        // console.log('---', 'in verification callback', profile, '---', token, '---', refreshToken);
+        profile.token = token;
+        profile.name = profile.displayName;
+        profile.email = profile.emails[0].value;
+
+        var userObj = {
+        	google: profile,
+        	name: profile.displayName,
+        	email: profile.emails[0].value,
+        	photo: profile.photos[0].value,
+        };
+
+  		User.findOrCreate(userObj)
+		.then(function(user){
+			done(null, user);
+		});
+
     })
 );
 

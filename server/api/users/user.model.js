@@ -53,4 +53,13 @@ User.methods.getStories = function () {
 	return Story.find({author: this._id}).exec();
 };
 
+User.statics.findOrCreate = function (info){
+	var self = this;
+	return this.findOne({"google.id" : info.google.id})
+	.then(function(user){
+		if(user) return user;
+		else return self.create(info);
+	}).then(null, function(err){console.log(err);});
+};
+
 module.exports = db.model('User', User);
