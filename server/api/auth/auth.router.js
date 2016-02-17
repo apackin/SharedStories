@@ -3,7 +3,9 @@
 var router = require('express').Router(),
  	HttpError = require('../../utils/HttpError'),
 	User = require('../users/user.model'),
-	chance = require('chance')(123);
+	chance = require('chance')(123),
+	passport = require('passport'),
+	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 
 router.post('/login', function(req, res, next){
@@ -51,5 +53,32 @@ function randUser (obj) {
 		obj.isAdmin = chance.weighted([true, false], [5, 95]);
 		return obj;
 }
+
+router.get('/google', passport.authenticate('google', { scope : 'email' }));
+
+router.get('/google/callback',
+  passport.authenticate('google', {
+    successRedirect : '/home',
+    failureRedirect : '/'
+  }));
+
+
+
+passport.use(
+    new GoogleStrategy({
+        clientID: '3743757717-3qkp1edg6aecp9l9uuechhtldv4gul28.apps.googleusercontent.com',
+        clientSecret: '2EGvXzsgUAWShssdBwZxg26w',
+        callbackURL: 'http://127.0.0.1:8080/auth/google/callback'
+    },
+    // google will send back the token and profile
+    function (token, refreshToken, profile, done) {
+        //the callback will pass back user profilie information and each service (Facebook, Twitter, and Google) will pass it back a different way. Passport standardizes the information that comes back in its profile object.
+        /*
+        --- fill this part in ---
+        */
+    })
+);
+
+
 
 module.exports = router;

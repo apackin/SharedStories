@@ -11,10 +11,10 @@ app.use(session({
     secret: 'yoMamastongueiscooler'
 }));
 
-app.use(function (req, res, next) {
-  console.log('session', req.session);
-  next();
-});
+// app.use(function (req, res, next) {
+//   console.log('session', req.session);
+//   next();
+// });
 
 app.use(passport.initialize());
 
@@ -28,6 +28,8 @@ app.use(require('./statics.middleware'));
 
 
 app.use('/api', require('../api/api.router'));
+
+app.use('/auth', require('../api/auth/auth.router'));
 
 var validFrontendRoutes = ['/', '/stories', '/users', '/stories/:id', '/users/:id', '/signup', '/login'];
 var indexPath = path.join(__dirname, '..', '..', 'public', 'index.html');
