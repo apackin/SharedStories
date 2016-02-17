@@ -1,7 +1,7 @@
 <div class="container story-container">
 	<ul class="list-inline large-font">
 		<li>
-			<span contenteditable
+			<span contenteditable="{{isAdmin()==1}}"
 				  class="large-font"
 				  ng-model="story.title"
 				  ng-model-options="{debounce: 500}"></span>
@@ -14,7 +14,7 @@
 		</li>
 	</ul>
 	<br>
-	<p contenteditable
+	<p contenteditable="{{isAdmin()==1}}"
 		ng-model="story.paragraphs"
 		ng-model-options="{debounce: 500}"
 		ng-list="<br><br>"
