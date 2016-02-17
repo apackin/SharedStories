@@ -43,20 +43,60 @@ router.get('/:id', function (req, res, next) {
 });
 
 router.put('/:id', function (req, res, next) {
-	_.extend(req.requestedUser, req.body);
-	req.requestedUser.save()
-	.then(function (user) {
-		res.json(user);
-	})
-	.then(null, next);
+	checkAdminFn(req, function(isAdm){
+		if(isAdm){	
+		_.extend(req.requestedUser, req.body);
+		req.requestedUser.save()
+		.then(function (user) {
+			res.json(user);
+		})
+		.then(null, next);
+	}
+		else {
+		res.sendStatus(401);
+		}
+	}, function(){
+		res.sendStatus(401);
+	});
+
+
+
 });
 
 router.delete('/:id', function (req, res, next) {
-	req.requestedUser.remove()
-	.then(function () {
-		res.status(204).end();
-	})
-	.then(null, next);
+	
+	checkAdminFn(req, function(isAdm){
+		if(isAdm){	
+			req.requestedUser.remove()
+			.then(function () {
+				res.status(204).end();
+			})
+			.then(null, next);
+		}
+		else {
+		res.sendStatus(401);
+		}
+	}, function(){
+		res.sendStatus(401);
+	});
+
 });
+
+function checkAdminFn (req,cb,nucb) {
+	if(req.session.user) { 
+		cb(req.session.user.isAdmin);
+	}
+	else if(req.session.passport) {
+		cb(req.session.passport.user.isAdmin);
+	}
+	else nucb();
+}
+
+function checkAdmin (req) {
+	if(req.session.user) { return req.session.user.isAdmin;}
+	if(req.session.passport) {return req.session.passport.user.isAdmin;}
+	return "NotUser";
+}
+
 
 module.exports = router;

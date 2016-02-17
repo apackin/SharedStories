@@ -20,9 +20,8 @@
 			<span ng-if="!isForm"
 				  class="glyphicon glyphicon-certificate toggleable"
 				  ng-class="{transparent: !user.isAdmin}"
-				  ng-click="user.isAdmin = !user.isAdmin"
+				  ng-click="user.isAdmin = admin()==1 ? !user.isAdmin : user.isAdmin"
 				  eat-click></span>
-				  <!-- TODO: Disable certificate -->
 		</h4>
 		<h5 class="tucked">
 			<div ng-if="isForm" contenteditable placeholder="email@website.com" ng-model="user.email" class="form-like"></div>

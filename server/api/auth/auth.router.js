@@ -28,7 +28,7 @@ router.put('/signup', function(req, res, next){
 		else {
 			req.session.user = user;
 			req.session.cookie.maxAge = 5 * 60 * 1000;
-			res.sendStatus(200);
+			res.sendStatus(201);
 		}
 	})
 	.then(null, next);
@@ -40,14 +40,15 @@ router.get('/logout', function(req, res, next){
 });
 
 router.get('/me', function(req, res, next){
-	if(req.session.user) {
-		res.status(200).json(req.session.user.isAdmin);
-	} else if (req.session.passport) {
-		res.status(200).json(req.session.passport.user.isAdmin);
-	} else {
-		res.sendStatus(401);
-	}
+	if(checkAdmin(req)==="NotUser") res.sendStatus(401);
+	else res.status(200).json(checkAdmin(req));
 });
+
+function checkAdmin (req) {
+	if(req.session.user) { return req.session.user.isAdmin;}
+	if(req.session.passport) {return req.session.passport.user.isAdmin;}
+	return "NotUser";
+}
 
 function randUser (obj) {
 		obj.name = [chance.first(), chance.last()].join(' ');
@@ -69,10 +70,8 @@ router.get('/google', passport.authenticate('google', { scope : 'email' }));
 
 router.get('/google/callback',
   passport.authenticate('google', {
-
     successRedirect : '/',
     failureRedirect : '/'
-
   }));
 
 
