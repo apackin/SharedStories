@@ -40,10 +40,13 @@ router.get('/logout', function(req, res, next){
 });
 
 router.get('/me', function(req, res, next){
-	if(req.session.user) 
+	if(req.session.user) {
 		res.status(200).json(req.session.user.isAdmin);
-	else
+	} else if (req.session.passport) {
+		res.status(200).json(req.session.passport.user.isAdmin);
+	} else {
 		res.sendStatus(401);
+	}
 });
 
 function randUser (obj) {
@@ -54,12 +57,20 @@ function randUser (obj) {
 		return obj;
 }
 
+passport.serializeUser(function (user, done) {
+	done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+    done(null, user);
+});
+
 router.get('/google', passport.authenticate('google', { scope : 'email' }));
 
 router.get('/google/callback',
   passport.authenticate('google', {
 
-    successRedirect : '/home',
+    successRedirect : '/',
     failureRedirect : '/'
 
   }));

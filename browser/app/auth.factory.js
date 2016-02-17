@@ -4,7 +4,7 @@ app.factory('Auth', function($http, $state){
 
 	var objjj = {
 		sendRequest : function(obj, method, path){
-			return $http[method]('api/auth/' + path , obj)
+			return $http[method]('auth/' + path , obj)
 			.then(function(res){
 				console.log("Thank you.", res);
 				objjj.admin = res.data?1:2;
@@ -24,7 +24,7 @@ app.factory('Auth', function($http, $state){
 		},
 
 		logout: function(){
-			return $http.get('api/auth/logout')
+			return $http.get('auth/logout')
 			.then(function(res){
 				console.log(res);
 				objjj.admin=null;
@@ -38,7 +38,7 @@ app.factory('Auth', function($http, $state){
 		},
 
 		checkSession: function(){
-			$http.get("api/auth/me")
+			$http.get("auth/me")
 			.then(function(res){
 				objjj.admin = res.data?1:2;
 			});

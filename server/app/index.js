@@ -11,10 +11,10 @@ app.use(session({
     secret: 'yoMamastongueiscooler'
 }));
 
-// app.use(function (req, res, next) {
-//   console.log('session', req.session);
-//   next();
-// });
+app.use(function (req, res, next) {
+  console.log('session', req.session, req.user);
+  next();
+});
 
 app.use(passport.initialize());
 
