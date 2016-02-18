@@ -2,9 +2,11 @@
 
 var mongoose = require('mongoose');
 var Promise = require('bluebird'); 
+var config = require('../.config.js');
 Promise.promisifyAll(mongoose);
 
-var databaseURI = 'mongodb://localhost:27017/auther';
+
+var databaseURI = config.dbInfo;
 
 var db = mongoose.connect(databaseURI).connection;
 

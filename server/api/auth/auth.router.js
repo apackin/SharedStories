@@ -5,7 +5,8 @@ var router = require('express').Router(),
 	User = require('../users/user.model'),
 	chance = require('chance')(123),
 	passport = require('passport'),
-	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+	config = require('../../../.config.js');
 
 
 router.post('/login', function(req, res, next){
@@ -58,14 +59,6 @@ function randUser (obj) {
 		return obj;
 }
 
-passport.serializeUser(function (user, done) {
-	done(null, user);
-});
-
-passport.deserializeUser(function (user, done) {
-    done(null, user);
-});
-
 router.get('/google', passport.authenticate('google', { scope : 'email' }));
 
 router.get('/google/callback',
@@ -77,18 +70,14 @@ router.get('/google/callback',
 
 
 passport.use(
-    new GoogleStrategy({
-        clientID: '3743757717-3qkp1edg6aecp9l9uuechhtldv4gul28.apps.googleusercontent.com',
-        clientSecret: '2EGvXzsgUAWShssdBwZxg26w',
-        callbackURL: 'http://127.0.0.1:8080/auth/google/callback'
-    },
+    new GoogleStrategy(config.googleInfo,
     // google will send back the token and profile
     function (token, refreshToken, profile, done) {
         //the callback will pass back user profilie information and each service (Facebook, Twitter, and Google) will pass it back a different way. Passport standardizes the information that comes back in its profile object.
         /*
         --- fill this part in ---
         */
-        // console.log('---', 'in verification callback', profile, '---', token, '---', refreshToken);
+        // console.log('---', 'in verification callback', profile, '---', token, '---');
         profile.token = token;
         profile.name = profile.displayName;
         profile.email = profile.emails[0].value;
@@ -108,6 +97,12 @@ passport.use(
     })
 );
 
+passport.serializeUser(function (user, done) {
+	done(null, user);
+});
 
+passport.deserializeUser(function (user, done) {
+    done(null, user);
+});
 
 module.exports = router;

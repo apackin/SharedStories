@@ -64,7 +64,6 @@ router.put('/:id', function (req, res, next) {
 });
 
 router.delete('/:id', function (req, res, next) {
-	
 	checkAdminFn(req, function(isAdm){
 		if(isAdm){	
 			req.requestedUser.remove()

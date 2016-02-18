@@ -3,12 +3,12 @@
 var app = require('express')(),
 	path = require('path'),
 	session = require('express-session'),
+	config = require('../../.config'),
 	passport = require('passport');
-
 
 app.use(session({
     // this mandatory configuration ensures that session IDs are not predictable
-    secret: 'yoMamastongueiscooler'
+    secret: config.sessionSecret
 }));
 
 app.use(function (req, res, next) {
@@ -17,7 +17,6 @@ app.use(function (req, res, next) {
 });
 
 app.use(passport.initialize());
-
 app.use(passport.session());
 
 app.use(require('./logging.middleware'));
